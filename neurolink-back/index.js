@@ -3,10 +3,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
-const bcrypt = require("bcrypt");
-const autoIncrement = require('mongoose-sequence')(mongoose);
-
-const saltRounds = 10;
+const authRoutes = require('./routes/auth');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -228,6 +225,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/CultureLink')
         console.log(err)
     })
 
+app.use('/api/auth', authRoutes);
+
 app.get('/', async (req, res) => {
     res.render('users/register')
 })
@@ -247,7 +246,8 @@ app.post('/register', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    res.render('main/home')
+    if(res.statusCode === 200)
+        res.status(200).render('main/home')
 })
 
 app.get('/posts', async (req, res) => {
@@ -261,7 +261,7 @@ app.get('/posts', async (req, res) => {
         res.render('posts/index', { posts, category: 'All'})
     }
     const posts = await Post.find({})
-    //res.render('posts/index', { posts })
+    return res.render('posts/index', { posts, category })
 })
 
 app.get('/posts/new', async (req, res) => {
