@@ -10,8 +10,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.urlencoded({extended: true}))
 app.set('views', path.join(__dirname, 'views'));
-
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(methodOverride('_method'))
@@ -245,6 +243,7 @@ app.get('/login', async (req, res) => {
     res.render('users/login')
 })
 
+
 app.post('/register', async (req, res) => {
     const newUser = new User(req.body);
     await newUser.save();
@@ -273,7 +272,7 @@ app.post('/login', async (req, res) => {
       // Set token in cookie
       //res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
   
-      return res.render('main/home')
+      return res.render('main/landing')
     } catch (error) {
       res.status(500).json({ message: 'Server error' });
     }
@@ -404,6 +403,42 @@ app.delete('/comments/:id', async (req, res) => {
     const { id } = req.params;
     const deletedProduct = await Comment.findByIdAndDelete(id)
     res.redirect('/comments')
+})
+
+app.get('/landing', async (req, res) => {
+    res.render('main/landing')
+})
+
+app.get('/dashboard', async (req, res) => {
+    res.render('users/dashboard')
+})
+
+app.get('/explore', async (req, res) => {
+    res.render('culture/explore')
+})
+
+app.get('/module', async (req, res) => {
+    res.render('module/details')
+})
+
+app.get('/community', async (req, res) => {
+    res.render('community/index')
+}) 
+
+app.get('/profiles', async (req, res) => {
+    res.render('profile/index')
+}) 
+
+app.get('/achievement', async (req, res) => {
+    res.render('achievement/index')
+})
+
+app.get('/notification', async (req, res) => {
+    res.render('notification/index')
+})
+
+app.get('/settings', async (req, res) => {
+    res.render('settings/index')
 })
 
 app.listen(3000, () => {
