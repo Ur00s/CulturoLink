@@ -12,17 +12,25 @@ router.post('/register', async (req, res) => {
   const { name, email, password, country } = req.body;
 
   try {
-    // Check if user already exists
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: 'User already exists' });
+    // Check if the user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create new user
-    user = new User({ name, email, password, country });
-    await user.save();
+    // Validate the password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
-    return res.status(201).json({ message: 'User registered successfully' });
+    // Generate JWT Token
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+
+    // Set the token in a cookie (httpOnly for security)
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+    res.render('main/home')
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

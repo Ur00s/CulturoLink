@@ -19,6 +19,10 @@ const User = require("./models/users")
 const Post = require('./models/posts')
 const Comment = require('./models/comments')
 
+const crypto = require('crypto');
+
+const JWT_SECRET = process.env.JWT_SECRET
+
 countries = ["Afghanistan",
         "Albania",
         "Algeria",
@@ -246,9 +250,58 @@ app.post('/register', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    if(res.statusCode === 200)
-        res.status(200).render('main/home')
-})
+    const { email, password } = req.body;
+  
+    try {
+      // Check if user exists
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+  
+      // Validate password
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+      }
+      
+      // Generate JWT Token
+      //const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+  
+      // Set token in cookie
+      //res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+  
+      return res.render('main/home')
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
+
+app.get('/profile', verifyToken, (req, res) => {
+    res.json({ message: 'This is a protected route', user: req.user });
+});
+  
+  // Logout Route
+app.post('/logout', (req, res) => {
+    //res.clearCookie('token');
+    return res.render('/login')
+});
 
 app.get('/posts', async (req, res) => {
     const { category } = req.query;
