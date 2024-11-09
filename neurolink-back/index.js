@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
 const authRoutes = require('./routes/auth');
+const { auth } = require('express-openid-connect');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -14,6 +15,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(methodOverride('_method'))
+
 
 const User = require("./models/users")
 const Post = require('./models/posts')
@@ -308,13 +310,13 @@ app.get('/posts', async (req, res) => {
 
     if (category) {
         const posts = await Post.find({ category })
-        res.render('posts/index', { posts, category })
+        return res.render('posts/index', { posts, category })
     } else {
         const posts = await Post.find({})
-        res.render('posts/index', { posts, category: 'All'})
+        return res.render('posts/index', { posts, category: 'All'})
     }
     const posts = await Post.find({})
-    return res.render('posts/index', { posts, category })
+    res.render('posts/index', { posts, category })
 })
 
 app.get('/posts/new', async (req, res) => {

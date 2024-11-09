@@ -1,10 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
-const crypto = require('crypto');
-
-const JWT_SECRET = crypto.randomBytes(64).toString('hex');
-
 const router = express.Router();
 
 // Registration Route
