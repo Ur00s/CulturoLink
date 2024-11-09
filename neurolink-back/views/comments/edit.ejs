@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit comment</title>
+</head>
+<body>
+    <h1>Edit Comment</h1>
+    <form action="/comments/<%= comment._id %>?_method=PUT" method="POST">
+        <label for="content">Comment text</label>
+        <textarea rows="5"  name="content" id="content" placeholder="<%= comment.content %>" value="<%= comment.content %>" ></textarea><br>
+        <button>Submit</button>
+    </form>
+
+    <a href="/comments/<%=comment._id%>">Cancel</a>
+</body>
+</html>

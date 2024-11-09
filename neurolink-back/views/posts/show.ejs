@@ -12,6 +12,8 @@
         <li>Content: <%= post.content %></li>
         <li>Category: <a href="/posts?category=<%= post.category%>"><%= post.category%></a></li>
     </ul>
+    <a href="/comments">All comments</a><br>
+    <br>
     <a href="/posts">All posts</a><br>
     <a href="/posts/<%= post._id%>/edit">Edit post</a>
     <form action="/posts/<%=post._id%>?_method=DELETE" method="POST">

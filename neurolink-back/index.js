@@ -20,6 +20,7 @@ app.use(methodOverride('_method'))
 
 const User = require("./models/users")
 const Post = require('./models/posts')
+const Comment = require('./models/comments')
 
 countries = ["Afghanistan",
         "Albania",
@@ -251,7 +252,7 @@ app.post('/login', async (req, res) => {
 
 app.get('/posts', async (req, res) => {
     const { category } = req.query;
-    
+
     if (category) {
         const posts = await Post.find({ category })
         res.render('posts/index', { posts, category })
@@ -298,6 +299,56 @@ app.delete('/posts/:id', async (req, res) => {
     const { id } = req.params;
     const deletedPost = await Post.findByIdAndDelete(id)
     res.redirect('/posts')
+})
+
+app.get('/comments', async (req, res) => {
+    try{
+        const comments = await Comment.find()
+        res.render("comments/index", {comments})
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).send('Internal Server Error');
+    }
+})
+
+app.get('/comments/new', async (req, res) => {
+    const comments = await Comment.find({})
+    res.render('comments/new')
+})
+
+app.post('/comments', async (req, res) => {
+    const newComment = new Comment(req.body);
+    await newComment.save();
+    const user = await User.findById(newComment.user_id);
+    const post = await Post.findById(newComment.post_id)
+    res.redirect(`/comments/${newComment._id}`, {user, post})
+})
+
+app.get('/comments/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const comment = await Comment.findById(id);
+    const comments = await Comment.find({})
+    res.render('comments/edit', { comment })
+})
+
+app.get('/comments/:id', async (req, res) => {
+    const { id } = req.params;
+    const comment = await Comment.findById(id);
+    const post = await Post.findById(comment.post_id)
+    console.log(comment);
+    res.render('comments/show', { comment, post })
+})
+
+app.put('/comments/:id', async(req, res) => {
+    const { id } = req.params;
+    const comment = await Comment.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
+    res.redirect(`/comments/${comment._id}`)
+}) 
+
+app.delete('/comments/:id', async (req, res) => {
+    const { id } = req.params;
+    const deletedProduct = await Comment.findByIdAndDelete(id)
+    res.redirect('/comments')
 })
 
 app.listen(3000, () => {

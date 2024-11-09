@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const { type } = require('os');
 const { kMaxLength } = require('buffer');
 
-// const User = require("./models/users");
-
 const commentSchema = new mongoose.Schema({
     user_id: {
         type: String,
@@ -13,9 +11,16 @@ const commentSchema = new mongoose.Schema({
     post_id: {
         type: String,
         required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    created_at: {
+        type: Date
     }
 })
 
-const Post = mongoose.model('Post', postSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
-module.exports = Post;
+module.exports = Comment;
