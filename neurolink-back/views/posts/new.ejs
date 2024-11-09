@@ -1,0 +1,34 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New post</title>
+</head>
+<body>
+    <h1>Add a Post</h1>
+    <form action="/posts" method="POST">
+        <label for="username">Post name</label>
+        <input type="text" name="user_id" id="user_id" placeholder="User name"><br>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" placeholder="Title of post"><br>
+        <label for="content">Content</label>
+        <textarea rows="5" cols="40" name="content" id="content" placeholder="Content of post"></textarea><br>
+        <label for="category">Url to image</label>
+        <label for="image_url">Title</label>
+        <input type="text" name="image_url" id="image_url" placeholder="Url to image"><br>
+        <label for="video_url">Url to video</label>
+        <input type="video_url" name="video_url" id="video_url" placeholder="Url to video"><br>
+        
+        <select name="category" id="category">
+            <% for(let category of categories) { %>
+                <option value="<%= category%>"><%= category %></option>
+            <% }%>
+        </select>
+        <button>Submit</button>
+    </form>
+    <a href="/posts">All posts</a><br>
+</body>
+</html>

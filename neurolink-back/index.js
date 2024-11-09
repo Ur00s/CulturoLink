@@ -8,12 +8,16 @@ const autoIncrement = require('mongoose-sequence')(mongoose);
 
 const saltRounds = 10;
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.urlencoded({extended: true}))
+app.set('views', path.join(__dirname, 'views'));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 const User = require("./models/users")
+const Post = require('./models/posts')
 
 countries = ["Afghanistan",
         "Albania",
@@ -210,7 +214,9 @@ countries = ["Afghanistan",
         "Zambia",
         "Zimbabwe"]
 
-mongoose.connect('mongodb://127.0.0.1:27017/CultureLink', { useNewUrlParser: true, useUnifiedTopology: true })
+categories = ["Food", "Traditions", "Travel", "Festivals"]
+
+mongoose.connect('mongodb://127.0.0.1:27017/CultureLink')
     .then(() => {
         console.log("MONGO CONNECTION OPEN!!!")
     })
@@ -232,18 +238,64 @@ app.get('/login', async (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
-    console.log(req.body.passwod_hash)
-    /* req.body.passwod_hash = bcrypt.hash(req.body.passwod_hash, saltRounds, (err, hash) => {
-        if (err) {
-          console.error('Error hashing password:', err);
-          return;
-        }
-        console.log('Hashed Password:', hash);
-    }); */
-    console.log(req.body.passwod_hash)
     const newUser = new User(req.body);
     await newUser.save();
     res.render('users/login')
+})
+
+app.post('/login', async (req, res) => {
+    res.render('main/home')
+})
+
+app.get('/posts', async (req, res) => {
+    const { category } = req.query;
+    console.log(category)
+    if (category) {
+        const posts = await Post.find({ category })
+        res.render('posts/index', { posts, category })
+    } else {
+        const posts = await Post.find({})
+        res.render('posts/index', { posts, category: 'All'})
+    }
+    const posts = await Post.find({})
+    //res.render('posts/index', { posts })
+})
+
+app.get('/posts/new', async (req, res) => {
+    const posts = await Post.find({})
+    res.render('posts/new', { categories })
+})
+
+app.post('/posts', async (req, res) => {
+    const newPost = new Post(req.body);
+    await newPost.save();
+    res.redirect(`/posts/${newPost._id}`)
+})
+
+app.get('/posts/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    const posts = await Post.findById({});
+    res.render('posts/edit', { post, categories })
+})
+
+app.get('/posts/:id', async (req, res) => {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    console.log(post);
+    res.render('posts/show', { post })
+})
+
+app.put('/posts/:id', async(req, res) => {
+    const { id } = req.params;
+    const post = await Post.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
+    res.redirect(`/post/${post._id}`)
+}) 
+
+app.delete('/posts/:id', async (req, res) => {
+    const { id } = req.params;
+    const deletedPost = await Post.findByIdAndDelete(id)
+    res.redirect('/posts')
 })
 
 app.listen(3000, () => {
