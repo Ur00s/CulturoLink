@@ -16,6 +16,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(methodOverride('_method'))
+
 const User = require("./models/users")
 const Post = require('./models/posts')
 
@@ -249,7 +251,7 @@ app.post('/login', async (req, res) => {
 
 app.get('/posts', async (req, res) => {
     const { category } = req.query;
-    console.log(category)
+    
     if (category) {
         const posts = await Post.find({ category })
         res.render('posts/index', { posts, category })
