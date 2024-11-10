@@ -441,6 +441,6 @@ app.get('/settings', async (req, res) => {
     res.render('settings/index')
 })
 
-app.listen(3000, () => {
+app.listen(9000, () => {
     console.log("APP IS LISTENING ON PORT 3000")
 })
