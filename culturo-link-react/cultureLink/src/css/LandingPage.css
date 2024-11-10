@@ -1,0 +1,30 @@
+.LandingMainContent {
+    background-color: #4d61f4;
+    border-radius: 8px;
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+    width: 35%;
+    height: 50%;
+}
+
+.LandingHeaderText {
+    font-size: 9rem;
+    text-align: center;
+    color: #fff;
+}
+
+.LandingCallToAction {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 390px;
+}
+
+.LandingMainBackground{  
+    background-image: url('../img/colorful-diverse-people-crowd-abstract-art-seamless-pattern.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+}

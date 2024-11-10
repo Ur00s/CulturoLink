@@ -1,0 +1,57 @@
+.SignUpLoginContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #4d61f4;
+    width: 100vw;
+    height: 100vh;
+}
+
+.SignUpLoginContent > h1 {
+    color: #fff;
+    margin-top: 20vh;
+    margin-bottom: 0;
+}
+
+.SignUpLoginContent > p {
+    text-align: center;
+    color: #fff;
+    width: 30vw;
+    margin-bottom: 10vh;
+}
+
+.ContentCardContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
+    width: 65vw;
+}
+
+.ContentCard{
+    justify-content: space-evenly;
+    border-radius: 8px;
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30vw;
+    height: 30vh;
+    background-color: #fff;
+}
+
+.ContentCard > h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.ContentCard > p {
+    margin: 0;
+    padding: 0;
+    width: 70%;
+    text-align: center;
+}
+
+.ContentCard > button {
+    width: 50%;
+}
